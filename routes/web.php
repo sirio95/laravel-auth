@@ -28,4 +28,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+Route::middleware(['auth', 'verified'])
+    ->name('admin.')
+    ->prefix('ad')
+    ->group(function () {
+        Route::get('/dash', [DashboardController::class, 'logged'])
+            ->name('dashboard');
+    });
+require __DIR__ . '/auth.php';
