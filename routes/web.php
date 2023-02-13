@@ -14,25 +14,30 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
+Route::get('/', [MainController::class, 'home'])
+    ->name('home');
+Route::get('/project/show/{project}', [MainController::class, 'show'])
+    ->name('project.show');
 
 Route::middleware(['auth', 'verified'])
     ->name('admin.')
-    ->prefix('ad')
+    ->prefix('admin')
     ->group(function () {
-        Route::get('/dash', [DashboardController::class, 'logged'])
-            ->name('dashboard');
+
+        Route::get('/project/create', [MainController::class, 'create'])
+            ->name('project.create');
+        Route::post('/project/create', [MainController::class, 'store'])
+            ->name('project.store');
+
+        Route::get('/project/edit/{project}', [MainController::class, 'edit'])
+            ->name('project.edit');
+        Route::post('/project/edit/{project}', [MainController::class, 'update'])
+            ->name('project.update');
+
+        Route::get('/project/delete/{project}', [MainController::class, 'delete'])
+            ->name('project.delete');
+
     });
+
+
 require __DIR__ . '/auth.php';
